@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 2013 ulf.dambacher@web.de
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 

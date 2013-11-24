@@ -3,7 +3,9 @@
 # $Header: $
 
 EAPI=5
-inherit git-2 
+PYTHON_DEPEND=2
+
+inherit git-2  python
 
 EGIT_REPO_URI="git://git.gnome.org/jhbuild"
 
@@ -16,7 +18,9 @@ SLOT=0
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
 IUSE=""
 
-RDEPEND=">=dev-lang/python-2.3"
+RDEPEND=">=dev-lang/python-2.3 \
+	 >=dev-vcs/cvs-1.12 \
+	 >=dev-vcs/subversion-1.7 "
 
 DEPEND="${RDEPEND}"
 

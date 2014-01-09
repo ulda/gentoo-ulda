@@ -51,3 +51,16 @@ pkg_postinst() {
 	mkdir -p "${ROOT}"/etc/init.d
 	ln -sf ../..${dst_dir}/functions.sh "${ROOT}"/etc/init.d/functions.sh
 }
+
+pkg_prerm() {
+	local dst_dir=/usr/lib/${PN}
+	local functions_path=/etc/init.d/functions.sh
+
+	if test -L ${functions_path} && test $(readlink -f ${functions_path}) = $(readlink -f ${dst_dir}/functions.sh)
+	then
+		einfo "removing /etc/init.d/functions.sh symlink..."
+     		rm -f ${functions_path}
+	else
+		einfo "symlink /etc/init.d/functions.sh does not point to ${dst_dir}/functions.sh"
+	fi
+}

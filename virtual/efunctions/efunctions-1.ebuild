@@ -1,5 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 EAPI=5
 
@@ -12,7 +13,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86"
 
 DEPEND=""
-RDEPEND="|| ( 
-	      sys-apps/efunctions
-	      sys-apps/openrc
+RDEPEND="|| (
+		  sys-apps/efunctions
+		  sys-apps/openrc
 	)"

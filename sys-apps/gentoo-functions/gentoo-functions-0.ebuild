@@ -8,6 +8,8 @@ EAPI=5
 DESCRIPTION="Stand-alone and portable version of Gentoo's functions.sh"
 HOMEPAGE="https://bugs.gentoo.org/show_bug.cgi?id=373219"
 
+SRC_URI=""
+
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
@@ -16,17 +18,19 @@ IUSE=""
 DEPEND=""
 RDEPEND="!sys-apps/openrc"
 
+S=${WORKDIR}
+
 src_install() {
-	local dst_dir=/lib/${PN}
+	local dst_dir=/lib/gentoo
 
 	dodir $dst_dir
 	insinto $dst_dir
-	newins "${FILESDIR}/functions.sh" functions.sh
+	doins "${FILESDIR}/functions.sh"
 	fperms -R +x $dst_dir
 }
 
 pkg_postinst() {
-	local dst_dir="${ROOT}"/lib/${PN}
+	local dst_dir="${ROOT}"/lib/gentoo
 	local functions_path="${ROOT}"/etc/init.d/functions.sh
 
 	einfo "Creating /etc/init.d/functions.sh symlink..."
@@ -35,7 +39,7 @@ pkg_postinst() {
 }
 
 pkg_prerm() {
-	local dst_dir="${ROOT}"/lib/${PN}
+	local dst_dir="${ROOT}"/lib/gentoo
 	local functions_path="${ROOT}"/etc/init.d/functions.sh
 
 	if test -L ${functions_path} && test $(readlink -f ${functions_path}) = $(readlink -f ${dst_dir}/functions.sh)

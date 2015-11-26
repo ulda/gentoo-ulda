@@ -1,0 +1,65 @@
+Index: src/gui/application/main.cpp
+===================================================================
+--- src/gui/application/main.cpp	(revision 14379)
++++ src/gui/application/main.cpp	(working copy)
+@@ -451,12 +451,12 @@
+ 
+     std::cout << "Thorn - " << std::boolalpha << Thorn << std::endl;
+ 
++    RosegardenApplication theApp(argc, argv);
++
+     // In order to ensure the Thorn style comes out right, we need to set our
+-    // custom style, which is based on QPlastiqueStyle
++    // custom style
+     if (Thorn) QApplication::setStyle(new ThornStyle);
+ 
+-    RosegardenApplication theApp(argc, argv);    
+-
+     theApp.setOrganizationName("rosegardenmusic");
+     theApp.setOrganizationDomain("rosegardenmusic.com");
+     theApp.setApplicationName(QObject::tr("Rosegarden"));
+Index: src/gui/general/ThornStyle.cpp
+===================================================================
+--- src/gui/general/ThornStyle.cpp	(revision 14379)
++++ src/gui/general/ThornStyle.cpp	(working copy)
+@@ -24,7 +24,6 @@
+ 
+ ThornStyle::ThornStyle()
+ {
+-    // ...
+ }
+ 
+ QIcon
+@@ -117,8 +116,8 @@
+     case SP_MediaVolumeMuted:
+     case SP_CustomBase:
+     default:
+-        // let QPlastiqueStyle handle the rest
+-        return QPlastiqueStyle::standardPixmap(standardIcon, option, parent);
++        // let the base class handle the rest
++        return QProxyStyle::standardPixmap(standardIcon, option, parent);
+     }
+ }
+ 
+Index: src/gui/general/ThornStyle.h
+===================================================================
+--- src/gui/general/ThornStyle.h	(revision 14379)
++++ src/gui/general/ThornStyle.h	(working copy)
+@@ -18,7 +18,7 @@
+ #ifndef RG_THORN_STYLE_H
+ #define RG_THORN_STYLE_H
+ 
+-#include <QPlastiqueStyle>
++#include <QProxyStyle>
+ #include <QIcon>
+ #include <rosegardenprivate_export.h>
+ 
+@@ -29,7 +29,7 @@
+ /** Subclass QPlastiqueStyle so we can define our own custom icons for
+  * QMessageBox and so on and make them look better in the Thorn style.
+  */
+-class ROSEGARDENPRIVATE_EXPORT ThornStyle : public QPlastiqueStyle
++class ROSEGARDENPRIVATE_EXPORT ThornStyle : public QProxyStyle
+ {
+     Q_OBJECT
+ 

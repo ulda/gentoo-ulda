@@ -35,6 +35,7 @@ src_prepare() {
 	default
 
 	sed -i 's#@localstatedir@/lib/fprint#@localstatedir@/fprint#g' data/fprintd.service.in || die "sed failed"
+	sed -i 's#(localstatedir)/lib/fprint#(localstatedir)/fprint#g' src/Makefile.am || die "sed failed"
 	eautoreconf
 }
 

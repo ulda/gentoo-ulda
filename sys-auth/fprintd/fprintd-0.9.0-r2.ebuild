@@ -42,11 +42,12 @@ src_prepare() {
 }
 
 src_configure() {
+	local systemddir=$(systemd_get_systemunitdir)
 	econf --disable-silent-rules \
 		$(use_enable pam) \
 		$(use_enable static-libs static) \
 		$(use_enable doc gtk-doc-html) \
-		$(use systemd && echo ' --with-systemdsystemunitdir="$(systemd_get_systemunitdir)"') 
+		$(use systemd && echo ' --with-systemdsystemunitdir="'$systemddir'"') 
 }
 
 src_install() {

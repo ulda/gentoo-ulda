@@ -42,7 +42,7 @@ src_configure() {
 		local emesonargs=(
 			$(meson_use pam)\
 			$(meson_use doc gtk_doc) \
-			$(use systemd && echo '-Dsystemd_system_unit_dir="'$systemddir'"' ) \
+			$(use systemd && echo '-Dsystemd_system_unit_dir='$systemddir ) \
 		)
 		meson_src_configure
 }

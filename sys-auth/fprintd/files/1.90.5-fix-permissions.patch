@@ -1,0 +1,13 @@
+--- fprintd-v1.90.5/data/net.reactivated.Fprint.conf.orig	2020-12-06 10:52:03.685456024 +0100
++++ fprintd-v1.90.5/data/net.reactivated.Fprint.conf	2020-12-06 10:52:07.174451479 +0100
+@@ -13,7 +13,9 @@
+   <!-- Anyone can talk to the service -->
+   <policy context="default">
+     <allow send_destination="net.reactivated.Fprint"
+-           send_interface="net.reactivated.Fprint"/>
++           send_interface="net.reactivated.Fprint.Manager"/>
++    <allow send_destination="net.reactivated.Fprint"
++           send_interface="net.reactivated.Fprint.Device"/>
+ 
+     <!-- Basic D-Bus API stuff -->
+     <allow send_destination="net.reactivated.Fprint"

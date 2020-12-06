@@ -34,7 +34,7 @@ DEPEND="${RDEPEND}
 
 BDEPEND="virtual/pkgconfig"
 
-PATCHES=( ${FILESDIR}/disable_tests.patch )
+PATCHES=( ${FILESDIR}/${PV}-disable_tests.patch )
 
 #S="${WORKDIR}/${PN}-${PV}"
 

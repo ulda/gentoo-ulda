@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="7"
-inherit eutils
+inherit autotools eutils
 
 DESCRIPTION="M-Audio DFU firmware loader for MobilePre, Ozone, Sonica and Transit USB audio interfaces"
 HOMEPAGE="http://usb-midi-fw.sourceforge.net/"
@@ -17,9 +17,14 @@ IUSE=""
 PATCHES=(
 		"${FILESDIR}/${P}"-segfault_strerror.patch
 		"${FILESDIR}/${P}"-udevinfo-autotools.patch
-		"${FILESDIR}/${P}"-udevinfo-configure.patch
 		"${FILESDIR}/${P}"-ioctl.patch
 )
+
+src_prepare() {
+	      default
+	      eautoconf
+	      eautomake
+}
 
 src_install() {
 	emake DESTDIR="${D}" install || die "install failed"

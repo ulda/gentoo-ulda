@@ -5,7 +5,7 @@ EAPI=7
 
 inherit qmake-utils git-r3
 
-DESCRIPTION="Jamulus "
+DESCRIPTION="Jamulus online team music practicing software "
 HOMEPAGE="https://jamulus.io/"
 EGIT_REPO_URI="https://github.com/jamulussoftware/jamulus.git"
 

@@ -11,7 +11,8 @@ SRC_URI="mirror://sourceforge/usb-midi-fw/${P}.tar.gz"
 
 LICENSE="GPL-2 madfuload"
 SLOT="0"
-KEYWORDS="~x86"
+KEYWORDS="~x86
+"
 IUSE=""
 
 pkg_setup() {

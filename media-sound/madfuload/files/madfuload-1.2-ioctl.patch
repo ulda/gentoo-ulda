@@ -1,0 +1,11 @@
+--- madfuload-1.2/madfuload.c.orig	2021-02-14 15:08:01.938167346 +0100
++++ madfuload-1.2/madfuload.c	2021-02-14 15:11:24.033175929 +0100
+@@ -17,7 +17,7 @@
+ #include <fcntl.h>
+ #include <getopt.h>
+ #include <syslog.h>
+-#include <linux/ioctl.h>
++#include <sys/ioctl.h>
+ 
+ /* USB stuff -- we can't rely on all Linux headers being there */
+ 

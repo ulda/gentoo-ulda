@@ -55,6 +55,9 @@ src_install() {
 	emake CC="$(tc-getCC)" DESTDIR="${D}" install
 	popd > /dev/null || die
 
+	exeinto /usr/bin
+	doexe mpy-cross/build/mpy-cross
+
 	# remove .git files
 	find tools -type f -name '.git*' -exec rm {} \; || die
 

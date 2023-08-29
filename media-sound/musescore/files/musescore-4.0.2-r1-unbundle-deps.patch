@@ -1,0 +1,149 @@
+Unbundling of all dependencies which are currently available as system packages
+and have not been modified (to our knowledge) by MuseScore.
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -206,7 +206,7 @@ if (BUILD_UNIT_TESTS)
+         FULL_DOCS "List XML files outputted by google test."
+     )
+ 
+-    add_subdirectory(thirdparty/googletest)
++    find_package(GTest REQUIRED)
+ endif(BUILD_UNIT_TESTS)
+ 
+ add_subdirectory(share)
+--- a/src/framework/audio/CMakeLists.txt
++++ b/src/framework/audio/CMakeLists.txt
+@@ -216,11 +216,18 @@ if (ENABLE_AUDIO_EXPORT)
+         ${CMAKE_CURRENT_LIST_DIR}/internal/soundtracks/soundtrackwriter.h
+         )
+ 
+-    add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/lame lame)
+-    add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/opusenc opusenc)
+-    add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/flac flac)
++    pkg_check_modules(lame REQUIRED IMPORTED_TARGET lame)
++    pkg_check_modules(libopusenc REQUIRED IMPORTED_TARGET libopusenc)
++    pkg_check_modules(flac REQUIRED IMPORTED_TARGET flac)
++    pkg_check_modules(flacpp REQUIRED IMPORTED_TARGET flac++)
+ 
+-    set(MODULE_LINK ${MODULE_LINK} lame opusenc flac)
++    set(MODULE_LINK
++        ${MODULE_LINK}
++        PkgConfig::lame
++        PkgConfig::libopusenc
++        PkgConfig::flac
++        PkgConfig::flacpp
++    )
+ endif()
+ 
+ if (OS_IS_MAC)
+--- a/src/framework/audio/internal/encoders/mp3encoder.cpp
++++ b/src/framework/audio/internal/encoders/mp3encoder.cpp
+@@ -22,7 +22,7 @@
+ 
+ #include "mp3encoder.h"
+ 
+-#include "lame.h"
++#include "lame/lame.h"
+ 
+ using namespace mu;
+ using namespace mu::audio;
+--- a/src/framework/audio/internal/encoders/oggencoder.cpp
++++ b/src/framework/audio/internal/encoders/oggencoder.cpp
+@@ -22,7 +22,7 @@
+ 
+ #include "oggencoder.h"
+ 
+-#include "opusenc.h"
++#include "opus/opusenc.h"
+ 
+ #include "log.h"
+ 
+--- a/src/framework/global/CMakeLists.txt
++++ b/src/framework/global/CMakeLists.txt
+@@ -105,8 +105,6 @@ set(MODULE_SRC
+     ${CMAKE_CURRENT_LIST_DIR}/serialization/xmlstreamreader.h
+     ${CMAKE_CURRENT_LIST_DIR}/serialization/xmlstreamwriter.cpp
+     ${CMAKE_CURRENT_LIST_DIR}/serialization/xmlstreamwriter.h
+-    ${CMAKE_CURRENT_LIST_DIR}/thirdparty//tinyxml/tinyxml2.cpp
+-    ${CMAKE_CURRENT_LIST_DIR}/thirdparty//tinyxml/tinyxml2.h
+     ${CMAKE_CURRENT_LIST_DIR}/serialization/zipreader.cpp
+     ${CMAKE_CURRENT_LIST_DIR}/serialization/zipreader.h
+     ${CMAKE_CURRENT_LIST_DIR}/serialization/zipwriter.cpp
+@@ -124,6 +122,8 @@ set(MODULE_SRC
+     ${CMAKE_CURRENT_LIST_DIR}/concurrency/taskscheduler.h
+ )
+ 
++find_package(tinyxml2 REQUIRED)
++
+ if (GLOBAL_NO_INTERNAL)
+     set(MODULE_DEF ${MODULE_DEF} -DGLOBAL_NO_INTERNAL)
+ else()
+@@ -184,6 +184,9 @@ set(MODULE_INCLUDE
+ set(MODULE_LINK
+     ${FS_LIB}
+     ${Z_LIB}
+-)
++    tinyxml2::tinyxml2
++    )
++
++set(MODULE_DEF ${MODULE_DEF} -DTINYXML2_IMPORT)
+ 
+ if (OS_IS_MAC)
+--- a/src/framework/global/serialization/xmldom.cpp
++++ b/src/framework/global/serialization/xmldom.cpp
+@@ -21,7 +21,7 @@
+  */
+ #include "xmldom.h"
+ 
+-#include "thirdparty/tinyxml/tinyxml2.h"
++#include <tinyxml2.h>
+ 
+ #include "log.h"
+ 
+--- a/src/framework/global/serialization/xmlstreamreader.cpp
++++ b/src/framework/global/serialization/xmlstreamreader.cpp
+@@ -23,7 +23,7 @@
+ 
+ #include <cstring>
+ 
+-#include "thirdparty/tinyxml/tinyxml2.h"
++#include <tinyxml2.h>
+ 
+ #include "log.h"
+ 
+--- a/src/framework/testing/gtest.cmake
++++ b/src/framework/testing/gtest.cmake
+@@ -60,7 +60,7 @@ find_package(Qt5 COMPONENTS Core Gui REQ
+ target_link_libraries(${MODULE_TEST}
+     Qt5::Core
+     Qt5::Gui
+-    gmock
++    GTest::gmock
+     global
+     ${MODULE_TEST_LINK}
+     )
+--- a/src/diagnostics/CMakeLists.txt	2023-08-29 18:39:32.937379470 +0200
++++ b/src/diagnostics/CMakeLists.txt	2023-08-29 19:05:57.773429474 +0200
+@@ -111,11 +111,13 @@
+ include(${PROJECT_SOURCE_DIR}/build/module.cmake)
+ 
+ # === Install crashpad handler ===
+-set(CPAD_ROOT_PATH ${CMAKE_CURRENT_LIST_DIR}/crashpad_handler)
+-if (OS_IS_LIN)
+-    install(PROGRAMS ${CPAD_ROOT_PATH}/linux/x86-64/crashpad_handler DESTINATION bin)
+-elseif(OS_IS_WIN)
+-    install(PROGRAMS ${CPAD_ROOT_PATH}/windows/x86-64/crashpad_handler.exe DESTINATION bin)
+-elseif(OS_IS_MAC)
+-    install(PROGRAMS ${CPAD_ROOT_PATH}/macos/x86-64/crashpad_handler DESTINATION ${Mscore_SHARE_NAME}Contents/MacOS)
+-endif()
++if (BUILD_CRASHPAD_CLIENT)
++   set(CPAD_ROOT_PATH ${CMAKE_CURRENT_LIST_DIR}/crashpad_handler)
++   if (OS_IS_LIN)
++       install(PROGRAMS ${CPAD_ROOT_PATH}/linux/x86-64/crashpad_handler DESTINATION bin)
++    elseif(OS_IS_WIN)
++	install(PROGRAMS ${CPAD_ROOT_PATH}/windows/x86-64/crashpad_handler.exe DESTINATION bin)
++    elseif(OS_IS_MAC)
++        install(PROGRAMS ${CPAD_ROOT_PATH}/macos/x86-64/crashpad_handler DESTINATION ${Mscore_SHARE_NAME}Contents/MacOS)
++    endif()
++endif(BUILD_CRASHPAD_CLIENT)
+

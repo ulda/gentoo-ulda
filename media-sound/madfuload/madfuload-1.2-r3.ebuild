@@ -1,9 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-inherit eutils linux-info
+EAPI="8"
+inherit autotools
 
 DESCRIPTION="M-Audio DFU firmware loader for MobilePre, Ozone, Sonica and Transit USB audio interfaces"
 HOMEPAGE="http://usb-midi-fw.sourceforge.net/"
@@ -11,17 +11,19 @@ SRC_URI="mirror://sourceforge/usb-midi-fw/${P}.tar.gz"
 
 LICENSE="GPL-2 madfuload"
 SLOT="0"
-KEYWORDS="~x86
-"
+KEYWORDS="~x86 ~amd64"
 IUSE=""
 
-pkg_setup() {
-	kernel_is le 2 6 8 && die "Kernel > 2.6.8 needed"
-	linux-info_pkg_setup
-}
+PATCHES=(
+		"${FILESDIR}/${P}"-segfault_strerror.patch
+		"${FILESDIR}/${P}"-udevinfo-autotools.patch
+		"${FILESDIR}/${P}"-ioctl.patch
+)
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}"-*.patch
+		  default
+		  eautoconf
+		  eautomake
 }
 
 src_install() {

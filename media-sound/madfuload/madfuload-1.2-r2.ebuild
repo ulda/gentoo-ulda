@@ -1,9 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="7"
-inherit autotools eutils
+inherit autotools
 
 DESCRIPTION="M-Audio DFU firmware loader for MobilePre, Ozone, Sonica and Transit USB audio interfaces"
 HOMEPAGE="http://usb-midi-fw.sourceforge.net/"
@@ -21,9 +21,9 @@ PATCHES=(
 )
 
 src_prepare() {
-	      default
-	      eautoconf
-	      eautomake
+		  default
+		  eautoconf
+		  eautomake
 }
 
 src_install() {
